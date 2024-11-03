@@ -1,7 +1,7 @@
 //! Process management syscalls
 use crate::{
     config::MAX_SYSCALL_NUM,
-    task::{exit_current_and_run_next, get_current_task_status, get_current_task_syscall_times, get_task_time, suspend_current_and_run_next, TaskStatus},
+    task::{exit_current_and_run_next, get_current_task_syscall_times, get_task_time, suspend_current_and_run_next, TaskStatus},
     timer::get_time_us,
 };
 
