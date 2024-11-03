@@ -57,7 +57,7 @@ pub fn sys_task_info(_ti: *mut TaskInfo) -> isize {
     trace!("kernel: sys_task_info");
     unsafe {
         *_ti = TaskInfo {
-            status: get_current_task_status(),
+            status: TaskStatus::Running,
             syscall_times: get_current_task_syscall_times(),
             time: get_task_time() as usize,
         }
