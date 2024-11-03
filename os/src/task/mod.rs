@@ -84,7 +84,9 @@ impl TaskManager {
         let mut inner = self.inner.exclusive_access();
         let task0 = &mut inner.tasks[0];
         task0.task_status = TaskStatus::Running;
-        task0.task_first_start_time = get_time_ms();
+        if task0.task_first_start_time == usize::MIN {
+            task0.task_first_start_time = get_time_ms();
+        }
         let next_task_cx_ptr = &task0.task_cx as *const TaskContext;
         drop(inner);
         let mut _unused = TaskContext::zero_init();
@@ -126,7 +128,11 @@ impl TaskManager {
         if let Some(next) = self.find_next_task() {
             let mut inner = self.inner.exclusive_access();
             let current = inner.current_task;
-            inner.tasks[next].task_status = TaskStatus::Running;
+            let mut task_next = inner.tasks[next];
+            if task_next.task_first_start_time == usize::MIN {
+                task_next.task_first_start_time = get_time_ms();
+            }
+            task_next.task_status = TaskStatus::Running;
             inner.current_task = next;
             let current_task_cx_ptr = &mut inner.tasks[current].task_cx as *mut TaskContext;
             let next_task_cx_ptr = &inner.tasks[next].task_cx as *const TaskContext;
